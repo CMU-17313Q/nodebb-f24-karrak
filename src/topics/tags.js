@@ -17,6 +17,12 @@ const utils = require('../utils');
 const batch = require('../batch');
 const cache = require('../cache');
 
+function extractTagValues(tags) {
+	console.log('Khalifa');
+	return tags.map(tagItem => tagItem.value);
+}
+
+
 module.exports = function (Topics) {
 	Topics.createTags = async function (tags, tid, timestamp) {
 		if (!Array.isArray(tags) || !tags.length) {
@@ -158,7 +164,8 @@ module.exports = function (Topics) {
 
 			// update 'tags' field in topic hash
 			topicData.forEach((topic) => {
-				topic.tags = topic.tags.map(tagItem => tagItem.value);
+				topic.tags = extractTagValues(topic.tags);
+
 				const index = topic.tags.indexOf(tag);
 				if (index !== -1) {
 					topic.tags.splice(index, 1, newTagName);

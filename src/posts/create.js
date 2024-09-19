@@ -10,6 +10,8 @@ const topics = require('../topics');
 const categories = require('../categories');
 const groups = require('../groups');
 const privileges = require('../privileges');
+const notifications = require.main.require('./notifications');
+
 
 module.exports = function (Posts) {
 	Posts.create = async function (data) {
@@ -50,6 +52,7 @@ module.exports = function (Posts) {
 		let result = await plugins.hooks.fire('filter:post.create', { post: postData, data: data });
 		postData = result.post;
 		await db.setObject(`post:${postData.pid}`, postData);
+		
 
 		const topicData = await topics.getTopicFields(tid, ['cid', 'pinned']);
 		postData.cid = topicData.cid;
