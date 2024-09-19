@@ -18,7 +18,6 @@ const batch = require('../batch');
 const cache = require('../cache');
 
 function extractTagValues(tags) {
-	console.log('Khalifa');
 	return tags.map(tagItem => tagItem.value);
 }
 
