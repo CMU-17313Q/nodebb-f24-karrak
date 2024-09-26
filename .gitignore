@@ -1,7 +1,8 @@
 dist/
 yarn.lock
 npm-debug.log
-node_modules/
+node_modules/*
+!node_modules/nodebb-theme-harmony 
 sftp-config.json
 config.json
 jsconfig.json
@@ -12,7 +13,7 @@ public/css/*.css
 *.sublime-workspace
 .project
 *.swp
-Vagrantfile
+Vagrantfilebit 
 .vagrant
 provision.sh
 *.komodoproject
