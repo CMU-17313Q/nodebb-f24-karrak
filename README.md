@@ -84,4 +84,4 @@ Interested in a sublicense agreement for use of NodeBB in a non-free/restrictive
 
 ## Group Members
 
-Abdallah Abdaljalil, Khadija Warraich, Khalifa AlThani, Retaj Sharaf, and Raman Saparkhan
+Abdallah Abdaljalil, Khadija Warraich, Khalifa Al-Thani, Retaj Sharaf, and Raman Saparkhan
