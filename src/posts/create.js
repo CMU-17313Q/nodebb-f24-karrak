@@ -14,6 +14,8 @@ const privileges = require('../privileges');
 module.exports = function (Posts) {
 	Posts.create = async function (data) {
 		// This is an internal method, consider using Topics.reply instead
+
+		// Might be a good idea to do some testing here to see what happens, but we'll see
 		const { uid } = data;
 		const { tid } = data;
 		const content = data.content.toString();
