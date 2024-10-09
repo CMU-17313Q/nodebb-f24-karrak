@@ -32,6 +32,7 @@ usersController.index = async function (req, res, next) {
 	}
 };
 
+// potentially do something similar in controller/topics.js
 usersController.search = async function (req, res) {
 	const searchData = await api.users.search(req, req.query);
 
