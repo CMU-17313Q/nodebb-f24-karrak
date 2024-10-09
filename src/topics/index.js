@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const validator = require('validator');
 
 const db = require('../database');
 const posts = require('../posts');
@@ -130,9 +129,13 @@ Topics.getTopicsByTids = async function (tids, options) {
 			topic.thumbs = result.thumbs[i];
 			topic.category = result.categoriesMap[topic.cid];
 			topic.user = topic.uid ? result.usersMap[topic.uid] : { ...result.usersMap[topic.uid] };
-			if (result.tidToGuestHandle[topic.tid]) {
-				topic.user.username = validator.escape(result.tidToGuestHandle[topic.tid]);
-				topic.user.displayname = topic.user.username;
+			if (topic.uid === 0) {
+				topic.user = { ...topic.user };
+				topic.user.displayname = 'Anonymous';
+				topic.user.username = 'Anonymous';
+				topic.user.userslug = 'Shh, Secret';
+				topic.user['icon:text'] = '?';
+				topic.user['icon:bgColor'] = '#003366';
 			}
 			topic.teaser = result.teasers[i] || null;
 			topic.isOwner = topic.uid === parseInt(uid, 10);
