@@ -2508,60 +2508,60 @@ describe('Topic\'s', () => {
 	});
 
 	before(async () => {
-        adminUid = await User.create({ username: 'admin', password: '123456' });
-        fooUid = await User.create({ username: 'foo' });
-        await groups.join('administrators', adminUid);
-        const adminLogin = await helpers.loginUser('admin', '123456');
-        adminJar = adminLogin.jar;
-        csrf_token = adminLogin.csrf_token;
+		adminUid = await User.create({ username: 'admin', password: '123456' });
+		fooUid = await User.create({ username: 'foo' });
+		await groups.join('administrators', adminUid);
+		const adminLogin = await helpers.loginUser('admin', '123456');
+		adminJar = adminLogin.jar;
+		csrf_token = adminLogin.csrf_token;
 
-        categoryObj = await categories.create({
-            name: 'Test Category',
-            description: 'Test category created by testing script',
-        });
-        topic = {
-            userId: adminUid,
-            categoryId: categoryObj.cid,
-            title: 'Test Topic Title',
-            content: 'The content of test topic',
-        };
-    });
+		categoryObj = await categories.create({
+			name: 'Test Category',
+			description: 'Test category created by testing script',
+		});
+		topic = {
+			userId: adminUid,
+			categoryId: categoryObj.cid,
+			title: 'Test Topic Title',
+			content: 'The content of test topic',
+		};
+	});
 
-    it('should create a new topic with anonymous being false', (done) => {
-        topics.post({
-            uid: topic.userId,
-            title: topic.title,
-            content: topic.content,
-            cid: topic.categoryId,
-            isAnonymous: false,
-        }, (err, result) => {
-            assert.ifError(err);
-            assert(result);
-            topic.tid = result.topicData.tid;
-            assert.strictEqual(result.topicData.uid, 3);
-            assert.strictEqual(result.topicData.user.username, 'admin 0');
-            assert.strictEqual(result.topicData.user.displayname, 'admin 0');
-            done();
-        });
-    });
+	it('should create a new topic with anonymous being false', (done) => {
+		topics.post({
+			uid: topic.userId,
+			title: topic.title,
+			content: topic.content,
+			cid: topic.categoryId,
+			isAnonymous: false,
+		}, (err, result) => {
+			assert.ifError(err);
+			assert(result);
+			topic.tid = result.topicData.tid;
+			assert.strictEqual(result.topicData.uid, 3);
+			assert.strictEqual(result.topicData.user.username, 'admin 0');
+			assert.strictEqual(result.topicData.user.displayname, 'admin 0');
+			done();
+		});
+	});
 
-    it('should create a new anonymous topic with anonymous being true', (done) => {
-        topics.post({
-            uid: topic.userId,
-            title: topic.title,
-            content: topic.content,
-            cid: topic.categoryId,
-            isAnonymous: true,
-        }, (err, result) => {
-            assert.ifError(err);
-            assert(result);
-            topic.tid = result.topicData.tid;
-            assert.strictEqual(result.topicData.uid, 0);
-            assert.strictEqual(result.topicData.user.username, 'Anonymous');
-            assert.strictEqual(result.topicData.user.displayname, 'Anonymous');
-            done();
-        });
-    });
+	it('should create a new anonymous topic with anonymous being true', (done) => {
+		topics.post({
+			uid: topic.userId,
+			title: topic.title,
+			content: topic.content,
+			cid: topic.categoryId,
+			isAnonymous: true,
+		}, (err, result) => {
+			assert.ifError(err);
+			assert(result);
+			topic.tid = result.topicData.tid;
+			assert.strictEqual(result.topicData.uid, 0);
+			assert.strictEqual(result.topicData.user.username, 'Anonymous');
+			assert.strictEqual(result.topicData.user.displayname, 'Anonymous');
+			done();
+		});
+	});
 });
 
 describe('Topics\'', async () => {
