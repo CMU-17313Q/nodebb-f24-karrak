@@ -2,13 +2,11 @@
 'use strict';
 
 const _ = require('lodash');
-const validator = require('validator');
 const nconf = require('nconf');
 
 const db = require('../database');
 const user = require('../user');
 const posts = require('../posts');
-const meta = require('../meta');
 const plugins = require('../plugins');
 const utils = require('../utils');
 
@@ -141,11 +139,14 @@ module.exports = function (Topics) {
 				postObj.selfPost = parseInt(uid, 10) > 0 && parseInt(uid, 10) === postObj.uid;
 
 				// Trying to work on this file to try and customize anonymous more
-
-				// Username override for guests, if enabled
-				if (meta.config.allowGuestHandles && postObj.uid === 0 && postObj.handle) {
-					postObj.user.username = validator.escape(String(postObj.handle));
-					postObj.user.displayname = postObj.user.username;
+				if (postObj.uid === 0 || postObj.user.uid === 0) {
+					postObj.user = { ...postObj.user };
+					postObj.user.displayname = 'Anonymous';
+					postObj.user.username = 'Anonymous';
+					postObj.user.userslug = 'Shh, Secret';
+					postObj.user['icon:text'] = '?';
+					postObj.user['icon:bgColor'] = '#003366';
+					postObj.user.status = 'away';
 				}
 			}
 		});

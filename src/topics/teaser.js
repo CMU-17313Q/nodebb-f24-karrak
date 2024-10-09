@@ -64,7 +64,15 @@ module.exports = function (Topics) {
 				post.uid = 0;
 			}
 
-			post.user = users[post.uid];
+			if (post.uid === 0) {
+				post.user = { ...post.user };
+				post.user.displayname = 'Anonymous';
+				post.user.username = 'Anonymous';
+				post.user.userslug = 'Shh, Secret';
+				post.user['icon:text'] = '?';
+				post.user['icon:bgColor'] = '#003366';
+				post.user.status = 'away';
+			} else { post.user = users[post.uid]; }
 			post.timestampISO = utils.toISOString(post.timestamp);
 			tidToPost[post.tid] = post;
 		});
