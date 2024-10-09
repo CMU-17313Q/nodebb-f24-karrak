@@ -37,7 +37,46 @@ define('forum/topic', [
 		}
 	});
 
-	Topic.init = async function () {
+	Topic.init = function () {
+		console.log('Topic.init is running');
+
+		// Listen for the correct event (composer topics post)
+		$(window).on('action:composer.topics.post', function (event, data) {
+			console.log('Topic Post Event Triggered:', data); // Log the event data
+
+			if (data && data.data && data.data.uid) { // Correctly access the UID
+				const uid = data.data.uid;
+				const topicName = data.data.title || 'Unknown Topic'; // Get the topic name
+
+				console.log('Topic post detected. UID:', uid, 'Topic Name:', topicName);
+
+				// Fetch the username based on the UID
+				api.get(`/users/${uid}`, {}, function (err, userData) {
+					if (err || !userData) {
+						console.error('Error fetching username:', err);
+						return;
+					}
+
+					const username = userData.username || 'Unknown User';
+					console.log('Username fetched:', username);
+
+					// Display the notification
+					require(['alerts'], function (alerts) {
+						alerts.alert({
+							title: 'New Post Created!',
+							message: `${username} has successfully posted in the topic "${topicName}".`,
+							type: 'success',
+							timeout: 5000,
+						});
+					});
+				});
+			} else {
+				console.log('No valid UID found in data');
+			}
+		});
+
+		console.log('Event listener for posts.save attached');
+
 		const tidChanged = !tid || parseInt(tid, 10) !== parseInt(ajaxify.data.tid, 10);
 		tid = ajaxify.data.tid;
 		currentUrl = ajaxify.currentPage;
@@ -48,34 +87,44 @@ define('forum/topic', [
 		if (tidChanged) {
 			posts.signaturesShown = {};
 		}
-		await posts.onTopicPageLoad(components.get('post'));
-		navigator.init('[component="topic"]>[component="post"]', ajaxify.data.postcount, Topic.toTop, Topic.toBottom, Topic.navigatorCallback);
 
-		postTools.init(tid);
-		threadTools.init(tid, $('.topic'));
-		events.init();
+		// Use .then() instead of await for promises
+		posts.onTopicPageLoad(components.get('post')).then(function () {
+			console.log('Posts loaded on topic page');
 
-		sort.handleSort('topicPostSort', 'topic/' + ajaxify.data.slug);
+			navigator.init('[component="topic"]>[component="post"]', ajaxify.data.postcount, Topic.toTop, Topic.toBottom, Topic.navigatorCallback);
+			postTools.init(tid);
+			threadTools.init(tid, $('.topic'));
+			events.init();
 
-		if (!config.usePagination) {
-			infinitescroll.init($('[component="topic"]'), posts.loadMorePosts);
-		}
+			sort.handleSort('topicPostSort', 'topic/' + ajaxify.data.slug);
 
-		addBlockQuoteHandler();
-		addCodeBlockHandler();
-		addParentHandler();
-		addRepliesHandler();
-		addPostsPreviewHandler();
-		setupQuickReply();
-		handleBookmark(tid);
-		handleThumbs();
+			if (!config.usePagination) {
+				infinitescroll.init($('[component="topic"]'), posts.loadMorePosts);
+			}
 
-		$(window).on('scroll', utils.debounce(updateTopicTitle, 250));
+			addBlockQuoteHandler();
+			addCodeBlockHandler();
+			addParentHandler();
+			addRepliesHandler();
+			addPostsPreviewHandler();
+			setupQuickReply();
+			handleBookmark(tid);
+			handleThumbs();
+			handleTopicSearch();
 
-		handleTopicSearch();
+			$(window).on('scroll', utils.debounce(updateTopicTitle, 250));
 
-		hooks.fire('action:topic.loaded', ajaxify.data);
+			hooks.on('action:topic.loaded', function (data) {
+				console.log('action:topic.loaded event fired', data); // Log the event
+			});
+
+			console.log('Event listeners attached');
+		}).catch(function (err) {
+			console.error('Error during topic page load:', err);
+		});
 	};
+
 
 	function handleTopicSearch() {
 		require(['mousetrap'], (mousetrap) => {
