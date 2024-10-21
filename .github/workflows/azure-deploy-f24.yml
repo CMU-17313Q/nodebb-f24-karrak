@@ -19,7 +19,7 @@ jobs:
       ./.github/workflows/test.yaml
 
   build-and-deploy:
-    if: github.repository == 'cmu-313/nodebb-f24-karrak'
+    if: github.repository == 'CMU-17313Q/nodebb-f24-karrak'
     needs: lint-and-test
 
     runs-on: ubuntu-latest
