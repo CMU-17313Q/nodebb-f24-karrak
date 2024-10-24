@@ -28,6 +28,7 @@
         ]
     },
     "dependencies": {
+        "@stryker-mutator/mocha-runner": "^8.6.0",
         "@adactive/bootstrap-tagsinput": "0.8.2",
         "@fontsource/inter": "5.0.18",
         "@fontsource/poppins": "5.0.14",
