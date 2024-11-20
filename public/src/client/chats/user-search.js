@@ -32,6 +32,7 @@ define('forum/chats/user-search', [
 	function doSearch() {
 		const chatsListEl = $('[component="chat/search/list"]');
 		const username = components.get('chat/search').val();
+		console.log('in this file');
 		if (!username) {
 			return clearInputAndResults(chatsListEl);
 		}
